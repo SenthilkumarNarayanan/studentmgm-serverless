@@ -139,10 +139,22 @@ app.use('/api/students', studentRoutes);
 
 // 404 handler for undefined API routes
 app.use('/api/*', (req, res) => {
+  console.log(`❌ API 404: ${req.method} ${req.path}`);
   res.status(404).json({ 
-    message: `API endpoint not found: ${req.method} ${req.path}` 
+    message: `API endpoint not found: ${req.method} ${req.path}`,
+    availableEndpoints: [
+      'POST /api/auth/admin/register',
+      'POST /api/auth/admin/login',
+      'POST /api/auth/student/register',
+      'POST /api/auth/student/login',
+      'GET /api/admin/students',
+      'POST /api/admin/student_enroll',
+      'GET /api/students/notifications',
+      'POST /api/students/leave'
+    ]
   });
 });
+
 
 // Global error handling middleware
 app.use((err, req, res, next) => {
