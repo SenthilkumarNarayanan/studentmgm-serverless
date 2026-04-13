@@ -1,0 +1,57 @@
+[build]
+  base = "/"
+  command = "npm run build:all"
+  publish = "student-management-system/dist/student-management-system/browser"
+  functions = "netlify/functions"
+
+[build.environment]
+  NODE_VERSION = "20"
+
+[context.production]
+  command = "npm run build:prod"
+  
+  [context.production.environment]
+    NODE_ENV = "production"
+
+# API Routes - All /api/* requests go to serverless functions
+[[redirects]]
+  from = "/api/*"
+  to = "/.netlify/functions/api/:splat"
+  status = 200
+  force = true
+
+# Health check route
+[[redirects]]
+  from = "/health"
+  to = "/.netlify/functions/api/health"
+  status = 200
+
+# Angular routing - Handle all frontend routes
+[[redirects]]
+  from = "/*"
+  to = "/index.html"
+  status = 200
+
+# Functions configuration
+[functions]
+  directory = "netlify/functions"
+  node_bundler = "esbuild"
+  
+  # Include your entire backend folder
+  included_files = [
+    "backend/**/*.js",
+    "backend/**/*.json",
+    "backend/**/*.env"
+  ]
+  
+  # External modules
+  external_node_modules = [
+    "express",
+    "mongoose",
+    "bcryptjs",
+    "jsonwebtoken",
+    "cors",
+    "dotenv",
+    "nodemailer"
+  ]
+

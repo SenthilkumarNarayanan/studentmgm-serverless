@@ -1,0 +1,288 @@
+<div class="container-fluid p-0">
+  <div class="row g-0">
+    <!-- Sidebar -->
+    <div class="col-auto" style="width: 280px;">
+      <div class="sidebar p-3">
+        <h4 class="mb-4">
+          <i class="bi bi-shield-lock"></i> Admin Panel
+        </h4>
+        <nav class="nav flex-column">
+          <a class="nav-link" [class.active]="activeTab === 'dashboard'" (click)="activeTab='dashboard'" href="javascript:void(0)">
+            <i class="bi bi-speedometer2"></i> Dashboard
+          </a>
+          <a class="nav-link" [class.active]="activeTab === 'enroll'" (click)="activeTab='enroll'" href="javascript:void(0)">
+            <i class="bi bi-person-plus"></i> Enroll Student
+          </a>
+          <a class="nav-link" [class.active]="activeTab === 'leaves'" (click)="activeTab='leaves'" href="javascript:void(0)">
+            <i class="bi bi-calendar-check"></i> Leave Requests
+            <span *ngIf="getPendingCount() > 0" class="badge bg-warning ms-2">{{ getPendingCount() }}</span>
+          </a>
+          <a class="nav-link" [class.active]="activeTab === 'notifications'" (click)="activeTab='notifications'" href="javascript:void(0)">
+            <i class="bi bi-bell"></i> Notifications
+          </a>
+          <a class="nav-link" [class.active]="activeTab === 'students'" (click)="activeTab='students'" href="javascript:void(0)">
+            <i class="bi bi-people"></i> Manage Students
+          </a>
+        </nav>
+        <hr class="my-3 bg-light">
+        <button class="btn btn-outline-light w-100" (click)="logout()">
+          <i class="bi bi-box-arrow-right"></i> Logout
+        </button>
+      </div>
+    </div>
+
+    <!-- Main Content -->
+    <div class="col">
+      <div class="navbar-top d-flex justify-content-between align-items-center">
+        <h5 class="mb-0">{{ getTitle() }}</h5>
+        <div class="d-flex align-items-center">
+          <span class="me-3">Welcome, {{ adminName }}</span>
+          <div class="avatar">{{ adminName?.charAt(0) }}</div>
+        </div>
+      </div>
+      
+      <div class="p-4">
+        <!-- Alert Message -->
+        <div *ngIf="message" class="alert" [class.alert-success]="messageType === 'success'" [class.alert-danger]="messageType === 'error'">
+          {{ message }}
+        </div>
+
+        <!-- Dashboard Tab -->
+        <div *ngIf="activeTab === 'dashboard'">
+          <div class="row">
+            <div class="col-md-4 mb-3">
+              <div class="card p-3">
+                <h5 class="text-muted">Total Leaves</h5>
+                <h2 class="mb-0">{{ leaves.length }}</h2>
+              </div>
+            </div>
+            <div class="col-md-4 mb-3">
+              <div class="card p-3">
+                <h5 class="text-muted">Pending Leaves</h5>
+                <h2 class="mb-0 text-warning">{{ getPendingCount() }}</h2>
+              </div>
+            </div>
+            <div class="col-md-4 mb-3">
+              <div class="card p-3">
+                <h5 class="text-muted">Total Students</h5>
+                <h2 class="mb-0">{{ students.length }}</h2>
+              </div>
+            </div>
+          </div>
+          
+          <div class="row">
+            <div class="col-md-6">
+              <div class="card">
+                <div class="card-header bg-white">
+                  <h6 class="mb-0">Recent Leaves</h6>
+                </div>
+                <div class="card-body">
+                  <div *ngFor="let leave of leaves.slice(0, 5)" class="mb-2">
+                    <div class="d-flex justify-content-between">
+                      <div>
+                        <strong>{{ getStudentName(leave) }}</strong>
+                        <br>
+                        <small>{{ leave.reason }}</small>
+                      </div>
+                      <span class="badge" [class.bg-warning]="leave.status === 'pending'"
+                            [class.bg-success]="leave.status === 'approved'"
+                            [class.bg-danger]="leave.status === 'rejected'">
+                        {{ leave.status }}
+                      </span>
+                    </div>
+                    <hr>
+                  </div>
+                  <div *ngIf="leaves.length === 0" class="text-center text-muted">
+                    No leaves found
+                  </div>
+                </div>
+              </div>
+            </div>
+            
+            <div class="col-md-6">
+              <div class="card">
+                <div class="card-header bg-white">
+                  <h6 class="mb-0">Recent Notifications</h6>
+                </div>
+                <div class="card-body">
+                  <div *ngFor="let notif of notifications.slice(0, 5)" class="mb-2">
+                    <strong>{{ notif.title }}</strong>
+                    <p class="mb-0 small">{{ notif.description }}</p>
+                    <hr>
+                  </div>
+                  <div *ngIf="notifications.length === 0" class="text-center text-muted">
+                    No notifications
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Enroll Tab -->
+        <div *ngIf="activeTab === 'enroll'">
+          <div class="card">
+            <div class="card-header bg-white">
+              <h5 class="mb-0">Enroll New Student</h5>
+            </div>
+            <div class="card-body">
+              <form #enrollForm="ngForm" (ngSubmit)="enrollStudent(enrollForm)">
+                <div class="mb-3">
+                  <label class="form-label">Full Name</label>
+                  <input type="text" class="form-control" name="name" ngModel required>
+                </div>
+                <div class="mb-3">
+                  <label class="form-label">Email</label>
+                  <input type="email" class="form-control" name="email" ngModel required>
+                </div>
+                <button type="submit" class="btn btn-primary" [disabled]="loading">
+                  <span *ngIf="loading" class="spinner-border spinner-border-sm me-2"></span>
+                  Enroll Student
+                </button>
+              </form>
+            </div>
+          </div>
+        </div>
+
+        <!-- Leaves Tab -->
+        <div *ngIf="activeTab === 'leaves'">
+          <div class="card">
+            <div class="card-header bg-white">
+              <h5 class="mb-0">Leave Requests</h5>
+            </div>
+            <div class="card-body">
+              <div class="table-responsive">
+                <table class="table">
+                  <thead>
+                    <tr>
+                      <th>Student</th>
+                      <th>Reason</th>
+                      <th>From</th>
+                      <th>To</th>
+                      <th>Status</th>
+                      <th>Action</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    <tr *ngFor="let leave of leaves">
+                      <td>{{ getStudentName(leave) }}</td>
+                      <td>{{ leave.reason }}</td>
+                      <td>{{ leave.fromDate | date }}</td>
+                      <td>{{ leave.toDate | date }}</td>
+                      <td>
+                        <span class="badge" [class.bg-warning]="leave.status === 'pending'"
+                              [class.bg-success]="leave.status === 'approved'"
+                              [class.bg-danger]="leave.status === 'rejected'">
+                          {{ leave.status }}
+                        </span>
+                      </td>
+                      <td>
+                        <button *ngIf="leave.status === 'pending'" class="btn btn-sm btn-success me-1" 
+                                (click)="updateLeaveStatus(leave._id, 'approved')">
+                          Approve
+                        </button>
+                        <button *ngIf="leave.status === 'pending'" class="btn btn-sm btn-danger" 
+                                (click)="updateLeaveStatus(leave._id, 'rejected')">
+                          Reject
+                        </button>
+                      </td>
+                    </tr>
+                    <tr *ngIf="leaves.length === 0">
+                      <td colspan="6" class="text-center">No leave requests</td>
+                    </tr>
+                  </tbody>
+                </table>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Notifications Tab -->
+        <div *ngIf="activeTab === 'notifications'">
+          <div class="card mb-3">
+            <div class="card-header bg-white">
+              <button class="btn btn-primary btn-sm float-end" (click)="showNotificationForm = !showNotificationForm">
+                <i class="bi bi-plus"></i> Create
+              </button>
+              <h5 class="mb-0">Notifications</h5>
+            </div>
+            <div class="card-body">
+              <!-- Create Form -->
+              <div *ngIf="showNotificationForm" class="mb-4 p-3 border rounded">
+                <h6>New Notification</h6>
+                <div class="mb-2">
+                  <input class="form-control" placeholder="Title" [(ngModel)]="newNotification.title">
+                </div>
+                <div class="mb-2">
+                  <textarea class="form-control" placeholder="Description" rows="2" [(ngModel)]="newNotification.description"></textarea>
+                </div>
+                <div class="mb-2">
+                  <input class="form-control" placeholder="File URL" [(ngModel)]="newNotification.fileUrl">
+                </div>
+                <button class="btn btn-success btn-sm" (click)="createNotification()">Publish</button>
+                <button class="btn btn-secondary btn-sm ms-2" (click)="showNotificationForm = false">Cancel</button>
+              </div>
+              
+              <!-- List -->
+              <div *ngFor="let n of notifications" class="border-bottom mb-3 pb-2">
+                <div class="d-flex justify-content-between">
+                  <h6 class="mb-1">{{ n.title }}</h6>
+                  <button class="btn btn-sm btn-outline-danger" (click)="deleteNotification(n._id)">
+                    <i class="bi bi-trash"></i>
+                  </button>
+                </div>
+                <p class="mb-1">{{ n.description }}</p>
+                <small class="text-muted">{{ n.createdAt | date }}</small>
+              </div>
+              <div *ngIf="notifications.length === 0" class="text-center text-muted">
+                No notifications
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Students Tab -->
+        <div *ngIf="activeTab === 'students'">
+          <div class="card">
+            <div class="card-header bg-white">
+              <h5 class="mb-0">Student List</h5>
+            </div>
+            <div class="card-body">
+              <div class="table-responsive">
+                <table class="table">
+                  <thead>
+                    <tr>
+                      <th>Reg No</th>
+                      <th>Name</th>
+                      <th>Email</th>
+                      <th>Status</th>
+                      <th>Action</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    <tr *ngFor="let s of students">
+                      <td>{{ s.regNo }}</td>
+                      <td>{{ s.name }}</td>
+                      <td>{{ s.email }}</td>
+                      <td>
+                        <span class="badge" [class.bg-danger]="s.isBlocked" [class.bg-success]="!s.isBlocked">
+                          {{ s.isBlocked ? 'Blocked' : 'Active' }}
+                        </span>
+                      </td>
+                      <td>
+                        <button class="btn btn-sm" [class.btn-warning]="!s.isBlocked" [class.btn-success]="s.isBlocked" 
+                                (click)="toggleBlock(s)">
+                          {{ s.isBlocked ? 'Unblock' : 'Block' }}
+                        </button>
+                      </td>
+                    </tr>
+                  </tbody>
+                </table>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

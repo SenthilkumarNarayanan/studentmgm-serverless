@@ -1,0 +1,57 @@
+.sidebar {
+  min-height: 100vh;
+  background: linear-gradient(135deg, #1e2a3a 0%, #0f1724 100%);
+  color: white;
+}
+
+.sidebar .nav-link {
+  color: rgba(255,255,255,0.8);
+  padding: 12px 20px;
+  margin: 4px 0;
+  border-radius: 8px;
+  cursor: pointer;
+}
+
+.sidebar .nav-link:hover,
+.sidebar .nav-link.active {
+  background: rgba(255,255,255,0.15);
+  color: white;
+}
+
+.sidebar .nav-link i {
+  margin-right: 12px;
+}
+
+.navbar-top {
+  background: white;
+  box-shadow: 0 2px 10px rgba(0,0,0,0.05);
+  padding: 12px 24px;
+}
+
+.avatar {
+  width: 40px;
+  height: 40px;
+  background: #4361ee;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: white;
+  font-weight: bold;
+}
+
+.card {
+  border: none;
+  border-radius: 16px;
+  box-shadow: 0 5px 20px rgba(0,0,0,0.05);
+  margin-bottom: 20px;
+}
+
+.btn-primary {
+  background: #4361ee;
+  border: none;
+}
+
+.btn-primary:hover {
+  background: #3050d0;
+}
