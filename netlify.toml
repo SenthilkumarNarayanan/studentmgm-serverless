@@ -1,8 +1,8 @@
 [build]
   base = "student-management-system"
-  command = "npm ci && npm run build:prod"
-  publish = "dist"
-  functions = "netlify/functions"
+  command = "npm run build:prod"
+  publish = "dist/student-management-system/browser"
+  functions = "../netlify/functions"
 
 [build.environment]
   NPM_CONFIG_PRODUCTION = "false"
@@ -20,7 +20,7 @@
   to = "/.netlify/functions/api/:splat"
   status = 200
   force = true
-  
+
 [[redirects]]
   from = "/*"
   to = "/index.html"
