@@ -21,7 +21,7 @@ app.get('/api/test', (req, res) => {
 });
 
 // Admin registration endpoint
-app.post('/api/auth/admin/register', (req, res) => {
+app.post('/api/v1/auth/admin/register', (req, res) => {
   res.json({ 
     success: true, 
     message: 'Registration endpoint reached',
@@ -30,7 +30,7 @@ app.post('/api/auth/admin/register', (req, res) => {
 });
 
 // Admin login endpoint
-app.post('/api/auth/admin/login', (req, res) => {
+app.post('/api/v1/auth/admin/login', (req, res) => {
   res.json({ 
     success: true, 
     message: 'Login endpoint reached',
