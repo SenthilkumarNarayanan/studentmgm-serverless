@@ -35,9 +35,9 @@ app.use(cors({
 // Handle preflight requests
 app.options('*', cors());
 
-app.use('/api/v1/auth', authRoutes);
-app.use('/api/v1/admin', adminRoutes);
-app.use('/api/v1/student', studentRoutes);
+app.use('/v1/auth', authRoutes);
+app.use('/v1/admin', adminRoutes);
+app.use('/v1/student', studentRoutes);
 
 // Error handler
 app.use((err, req, res, next) => {
