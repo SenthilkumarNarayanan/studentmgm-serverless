@@ -1,59 +1,58 @@
 [build]
   base = "student-management-system"
   command = "npm run build:prod"
+
+  # TEMP: keep your current path since you have browser/browser
+  # (later fix Angular to remove duplicate folder)
   publish = "dist/student-management-system/browser/browser"
-  functions = "../netlify/functions"
 
 [build.environment]
-  NPM_CONFIG_PRODUCTION = "false"
   NODE_VERSION = "20"
+  NPM_CONFIG_PRODUCTION = "false"
 
 [context.production]
   command = "npm run build:prod"
-  
+
   [context.production.environment]
     NODE_ENV = "production"
 
-# API Routes - All /api/* requests go to serverless functions
-# API Routes FIRST
+# =========================
+# 🔥 REDIRECTS (VERY IMPORTANT ORDER)
+# =========================
+
+# ✅ API Routes FIRST
 [[redirects]]
   from = "/api/*"
   to = "/.netlify/functions/api/:splat"
   status = 200
   force = true
 
-# Health check
+# ✅ Health check
 [[redirects]]
   from = "/health"
   to = "/.netlify/functions/api/health"
   status = 200
 
-# Angular routing (ONLY ONCE, LAST)
+# ✅ Angular SPA fallback (ONLY ONCE, MUST BE LAST)
 [[redirects]]
   from = "/*"
   to = "/index.html"
   status = 200
 
+# =========================
+# 🔧 FUNCTIONS CONFIG
+# =========================
 
-# Angular routing - Handle all frontend routes
-[[redirects]]
-  from = "/*"
-  to = "/index.html"
-  status = 200
-
-# Functions configuration
 [functions]
   directory = "netlify/functions"
   node_bundler = "esbuild"
-  
-  # Include your entire backend folder
+
   included_files = [
     "backend/**/*.js",
     "backend/**/*.json",
     "backend/**/*.env"
   ]
-  
-  # External modules
+
   external_node_modules = [
     "express",
     "mongoose",
@@ -63,4 +62,3 @@
     "dotenv",
     "nodemailer"
   ]
-
