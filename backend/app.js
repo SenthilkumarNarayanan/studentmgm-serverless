@@ -8,10 +8,10 @@ const app = express();
 
 // CORS configuration
 const allowedOrigins = [
+  'https://studentmgm.netlify.app/',
   'http://localhost:4200',
   'http://localhost:8888',
   'http://localhost:3000',
-  'https://studentmgm.netlify.app/',  // Add your Netlify URL later
 ];
 
 app.use(cors({
