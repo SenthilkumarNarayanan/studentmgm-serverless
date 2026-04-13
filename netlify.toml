@@ -1,6 +1,6 @@
 [build]
   base = "/"
-  command = "npm run build:all"
+  command = "cd student-management-system && npm install && npm run build"  # Build Command
   publish = "student-management-system/dist/student-management-system/browser"
   functions = "netlify/functions"
 
