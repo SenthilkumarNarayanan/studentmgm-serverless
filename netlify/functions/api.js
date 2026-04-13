@@ -7,7 +7,7 @@ const app = express();
 app.use(express.json());
 
 // Health check endpoint
-app.get('/api/health', (req, res) => {
+app.get('/health', (req, res) => {
   res.json({ 
     status: 'ok', 
     message: 'API is working!',
@@ -16,12 +16,12 @@ app.get('/api/health', (req, res) => {
 });
 
 // Test endpoint
-app.get('/api/test', (req, res) => {
+app.get('/test', (req, res) => {
   res.json({ message: 'Test endpoint works!' });
 });
 
 // Admin registration endpoint
-app.post('/api/v1/auth/admin/register', (req, res) => {
+app.post('/v1/auth/admin/register', (req, res) => {
   res.json({ 
     success: true, 
     message: 'Registration endpoint reached',
@@ -30,7 +30,7 @@ app.post('/api/v1/auth/admin/register', (req, res) => {
 });
 
 // Admin login endpoint
-app.post('/api/v1/auth/admin/login', (req, res) => {
+app.post('/v1/auth/admin/login', (req, res) => {
   res.json({ 
     success: true, 
     message: 'Login endpoint reached',
