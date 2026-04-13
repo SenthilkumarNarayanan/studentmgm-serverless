@@ -1,7 +1,7 @@
 [build]
   base = "student-management-system"
   command = "npm run build:prod"
-  publish = "dist/student-management-system/browser"
+  publish = "dist/student-management-system/browser/browser"
   functions = "../netlify/functions"
 
 [build.environment]
@@ -15,23 +15,25 @@
     NODE_ENV = "production"
 
 # API Routes - All /api/* requests go to serverless functions
+# API Routes FIRST
 [[redirects]]
   from = "/api/*"
   to = "/.netlify/functions/api/:splat"
   status = 200
   force = true
 
+# Health check
+[[redirects]]
+  from = "/health"
+  to = "/.netlify/functions/api/health"
+  status = 200
+
+# Angular routing (ONLY ONCE, LAST)
 [[redirects]]
   from = "/*"
   to = "/index.html"
   status = 200
 
-
-# Health check route
-[[redirects]]
-  from = "/health"
-  to = "/.netlify/functions/api/health"
-  status = 200
 
 # Angular routing - Handle all frontend routes
 [[redirects]]
