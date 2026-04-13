@@ -11,8 +11,7 @@ const allowedOrigins = [
   'http://localhost:4200',
   'http://localhost:8888',
   'http://localhost:3000',
-  'https://your-netlify-app.netlify.app',  // Add your Netlify URL later
-  'https://student-mgmt-frontend.onrender.com'  // Your Render frontend if any
+  'https://studentmgm.netlify.app/',  // Add your Netlify URL later
 ];
 
 app.use(cors({
