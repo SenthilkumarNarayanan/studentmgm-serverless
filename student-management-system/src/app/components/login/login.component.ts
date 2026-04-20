@@ -47,9 +47,10 @@ export class LoginComponent {
     const loginObservable = this.role === 'admin' 
       ? this.api.adminLogin(this.email, this.password)
       : this.api.studentLogin(this.email, this.password);
-    
+      console.log('api:', this.api);
+      
     console.log('Login Observable:', loginObservable);
-
+    
     loginObservable.subscribe({
       next: (res: any) => {
         console.log('Login success response:', res);
