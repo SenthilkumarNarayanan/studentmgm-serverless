@@ -5,10 +5,14 @@ const adminController = require('../../backend/controllers/adminController');
 const authRoutes = require('../../backend/routes/authRoutes');
 const adminRoutes = require('../../backend/routes/adminRoutes');
 const studentRoutes = require('../../backend/routes/studentRoutes');
+const notificationRoutes = require('../../backend/routes/notificationRoutes');
+const leaveRoutes = require('../../backend/routes/leaveRoutes');
+const authMiddleware = require('../../backend/middleware/authMiddleware');
+const cors = require('cors');
 
 
 const app = express();
-
+app.use(cors());
 app.use(express.json());
 
 // ✅ TEST ROUTE (IMPORTANT)
