@@ -1,6 +1,11 @@
 const express = require('express');
 const serverless = require('serverless-http');
-const auth= require('./');
+const auth= require('../../backend/middleware/auth');
+const adminController = require('../../backend/controllers/adminController');
+const authRoutes = require('../../backend/routes/authRoutes');
+const adminRoutes = require('../../backend/routes/adminRoutes');
+const studentRoutes = require('../../backend/routes/studentRoutes');
+
 
 const app = express();
 
